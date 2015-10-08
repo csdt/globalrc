@@ -1,0 +1,7 @@
+Host 127.0.0.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+
+Host localhost
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null

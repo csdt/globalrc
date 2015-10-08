@@ -1,0 +1,56 @@
+#! /bin/bash
+
+if [ -n "$PS1" ]
+then
+
+  white="00m"
+  red="31m"
+  green="32m"
+  blue="34m"
+
+
+  # Couleurs normales
+  normal_color=$green
+  pwd_color=$blue
+  history_color="33m"
+  end_color=$pwd_color
+  root_color=$red
+
+
+
+  # couleurs dans un ssh
+  if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]
+  then
+    normal_color="36m" # Cyan
+    root_color="35m"   # Violet
+  fi
+
+
+
+  # Couleurs dans un screen
+  if [[ $TERMCAP =~ screen ]] || [[ $TERM == "screen" ]]
+  then
+    pwd_color="33m"    # Jaune
+    end_color=$pwd_color
+  fi
+
+
+  if [[ ${EUID} == 0 ]]
+  then
+    color=$root_color
+  else
+    color=$normal_color
+  fi
+
+  execution="\$(if [[ \$? == 0 ]]; then echo \"\[\e[01;$green\]\342\234\223\"; else echo \"\[\e[01;$red\]\342\234\227\"; fi)"
+  user="\[\e[01;$color\]\u\[\e[00;$color\]@\h"
+  pwd="\[\e[01;$pwd_color\]\w"
+  history="\[\e[00;$history_color\]\$SHLVL[\!]"
+  end="\[\e[01;$end_color\]\\\$\[\e[00m\]"
+
+  PS1="$execution $user $history $pwd $end "
+
+  unset white red green blue normal_color pwd_color history_color end_color root_color color execution user pwd history end
+
+fi
+

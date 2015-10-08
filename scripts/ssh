@@ -1,0 +1,27 @@
+#! /bin/sh
+
+# Grouping ensures the script not to fail when edited or overwritten
+{
+  COMMAND="$(which -a ssh | grep -v "${GLOBALRC:-.globalrc}" | grep -v "${LOCALRC:-.localrc}" | head -1)"
+
+  # Supprime le fichier temporaire à la sortie du script
+  trap 'RCODE=$? ; rm -f "$tempfile"; exit $RCODE' 0 1 2 3 4 6 8 15
+
+  # Génère un fichier unique pour la concaténation de la configuration
+  tempfile="/tmp/sshconfig-$(id -ru)-$$-$(date +%N)"
+
+  # Le fichier temporaire n'a pas à être visible des autres utilisateurs
+  umask 077
+  touch "$tempfile"
+  chmod 600 "$tempfile" # just in case there is a problem with umask
+
+  # Concaténation des configurations dans un fichier temporaire
+  cat "$LOCALRC/sshconfig" "$GLOBALRC/sshconfig" ~/.ssh/config /etc/ssh/ssh_config > "$tempfile" 2> /dev/null
+
+  # Execute ssh avec le fichier temporaire
+  command "$COMMAND" -F "$tempfile" "$@"
+  RCODE="$?"
+
+  # forward exit code
+  exit $RCODE
+}

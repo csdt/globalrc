@@ -1,0 +1,36 @@
+#! /bin/bash
+
+# Aliases pour ls
+alias ls='ls --color=auto'
+alias ll='ls -lAFh'
+alias la='ls -A'
+alias l='ls -cF'
+
+# Aliases pour grep
+alias grep='grep --colour=auto'
+alias egrep='egrep --colour=auto'
+alias fgrep='fgrep --colour=auto'
+
+# Alias pour sudo
+alias ss='sudo -sE'
+
+# Aliases pour dossiers parents
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# Alias pour que ssh mette la clé dans le ssh-agent directement
+alias ssh='ssh-add -l 2> /dev/null || ssh-add ; ssh'
+
+# Aliases pour apt-get
+if [ -f $(which apt-get 2> /dev/null) ]
+then
+  alias agi='sudo apt-get install'
+  alias ags='sudo apt-cache search'
+  alias agu='sudo apt-get update'
+  alias maj='sudo apt-get update && sudo apt-get upgrade'
+elif [ -f $(which yum 2> /dev/null) ]
+then
+  alias agi='sudo yum install'
+  alias ags='sudo yum search'
+  alias maj='sudo yum update'
+fi

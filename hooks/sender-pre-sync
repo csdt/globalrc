@@ -1,0 +1,6 @@
+#! /bin/bash
+hook="${LOCALRC:-~/.localrc}/hooks/sender-pre-sync"
+if [ -f "$hook" ]
+then
+  "$hook" "$@"
+fi

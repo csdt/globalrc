@@ -1,0 +1,12 @@
+#! /bin/bash
+
+export LOCALRC="$(pwd)"
+
+# Ajoute les scripts aux programmes par défaut
+SCRIPT_PATH="$LOCALRC/scripts"
+if [ -d "$SCRIPT_PATH" ] && ! ( echo "$PATH" | grep "$SCRIPT_PATH" &> /dev/null)
+then
+  PATH="$SCRIPT_PATH:$PATH"
+fi
+unset SCRIPT_PATH
+

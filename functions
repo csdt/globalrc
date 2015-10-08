@@ -1,0 +1,36 @@
+#! /bin/bash
+
+# Execute la dernièrne commande en tant que root
+function rs {
+  if [ $# = 0 ]
+  then
+    sudo $(history -p '!!')
+  # Ou agit comme un alias de sudo si des arguemtns sont passés
+  else
+    sudo "$@"
+  fi
+}
+
+# Créer un dossier et se place dedans
+function mkcd {
+  if [ $# = 1 ]
+  then
+    dir="$1"
+    mkdir -p "$dir"
+    cd "$dir"
+  else
+    echo "mkcd nécessite un argument (et un seul)" >&2
+    exit 1
+  fi
+}
+
+# Augmente la commande ping
+function ping {
+  if [ $# = 0 ]
+  then
+    command ping 8.8.8.8
+  else
+    command ping "$@"
+  fi
+}
+

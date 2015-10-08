@@ -1,0 +1,40 @@
+#! /bin/bash
+if [ -z "$GLOBALRC" ]
+then
+  command=". ~/.globalrc/bashrc"
+  if ! grep "$command" ~/.bashrc > /dev/null
+  then
+    chmod 755 ~/.globalrc/scripts
+    echo                                                  >> ~/.bashrc
+    echo "# Charge les composantes globales du bashrc"    >> ~/.bashrc
+    echo "if [ -f ~/.globalrc/bashrc ]; then"             >> ~/.bashrc
+    echo "  $command"                                     >> ~/.bashrc
+    echo "fi"                                             >> ~/.bashrc
+  fi
+fi
+if [ -z "$LOCALRC" ]
+then
+  command=". ~/.localrc/bashrc"
+  if ! [ -e ~/.localrc ]
+  then
+    cp -r ~/.globalrc/localrc-skel ~/.localrc
+    if ! grep "$command" ~/.bashrc > /dev/null
+    then
+      echo                                                >> ~/.bashrc
+      echo "# Charge les composantes locales du bashrc"   >> ~/.bashrc
+      echo "if [ -f ~/.localrc/bashrc ]; then"            >> ~/.bashrc
+      echo "  $command"                                   >> ~/.bashrc
+      echo "fi"                                           >> ~/.bashrc
+    fi
+  fi
+fi
+if [ -z "$GLOBALRC" ]
+then
+  . ~/.globalrc/bashrc
+fi
+
+hook="${LOCALRC:-~/.localrc}/hooks/push-post-copy"
+if [ -f "$hook" ]
+then
+  "$hook" "$@"
+fi

@@ -1,0 +1,154 @@
+#! /bin/bash
+
+eval "$(declare -f _known_hosts_real 2>/dev/null | sed '/\blocal\b.*-a.*\bconfig\b/{a\
+  [ -f "$GLOBALRC/sshconfig" ] && config+=( "$GLOBALRC/sshconfig")
+a\
+  [ -f "$LOCALRC/sshconfig" ] && config+=( "$LOCALRC/sshconfig")
+}')"
+
+function _pushrc {
+  compopt +o default
+
+  local cur before prev opts yn i gopts hopts
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+  before="${COMP_WORDS[COMP_CWORD-2]}"
+  hosts=$(grep -h '^Host' ~/.ssh/config "$GLOBALRC/sshconfig" "$LOCALRC/sshconfig" 2> /dev/null | awk '{print $2}' 2> /dev/null)
+  gopts="-v --verbose -q --quiet -f --fake -? --help --version"
+  opts="-k --export-key -K --no-export-key -m --master-co -M --no-master-co -t --scp-trick -T --no-scp-trick -c --compression -C --no-compression -p --port -h --host"
+  hopts="-s --hooks -S --no-hooks"
+  for yn in "" "no-" ; do
+    hopts="$hopts --${yn}pre-hooks --${yn}post-hooks"
+    for i in "local" "remote" "sender" "receiver" ; do
+      hopts="$hopts --$yn$i-pre-hook --$yn$i-post-hook"
+    done
+  done
+
+  if [ "$prev" = '=' ]
+  then
+    prev="$before"
+    before='='
+  elif [ "$cur" = '=' ]
+  then
+    cur=
+    before='='
+  fi
+
+  # default completion by host
+  if ! echo "$cur" | grep '^-' > /dev/null
+  then
+    if declare -F _known_hosts_real > /dev/null 2>&1
+    then
+      _known_hosts_real -a "$cur"
+    elif echo "$cur" | grep '@' > /dev/null
+    then
+      COMPREPLY=($(compgen -P "$(echo "$cur" | sed 's/^\(.*@\).*$/\1/')" -W "$hosts" -- "$(echo "$cur" | sed 's/^.*@//')"))
+    else
+      COMPREPLY=($(compgen -W "$hosts" -- ${cur}))
+    fi
+  fi
+  case "$prev" in
+    -k|--export-key)
+      compopt -o default
+      [ "$before" = '=' ] && COMPREPLY=()
+      return 0
+      ;;
+    -p|--port)
+      COMPREPLY=()
+      return 0
+      ;;
+    -h|--host)
+      return 0
+      ;;
+    *)
+      case "$cur" in
+        .)
+          COMPREPLY=(.)
+          return 0
+          ;;
+        -*)
+          COMPREPLY=($(compgen -W "$gopts $opts" -- ${cur}))
+          if [ ${#COMPREPLY[@]} = 0 ] ; then
+            COMPREPLY=($(compgen -W "$hopts" -- ${cur}))
+          fi
+          return 0
+          ;;
+        *)
+          return 0
+          ;;
+      esac
+      ;;
+  esac
+  return 0
+}
+complete -F _pushrc pushrc
+
+function _pullrc {
+  compopt +o default
+
+  local cur before prev opts yn i gopts hopts
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+  before="${COMP_WORDS[COMP_CWORD-2]}"
+  hosts=$(grep -h '^Host' ~/.ssh/config "$GLOBALRC/sshconfig" "$LOCALRC/sshconfig" 2> /dev/null | awk '{print $2}' 2> /dev/null)
+  gopts="-v --verbose -q --quiet -f --fake -? --help --version"
+  opts="-k --export-key -K --no-export-key -m --master-co -M --no-master-co -t --scp-trick -T --no-scp-trick -c --compression -C --no-compression -p --port -h --host"
+  hopts="-s --hooks -S --no-hooks"
+  for yn in "" "no-" ; do
+    hopts="$hopts --${yn}pre-hooks --${yn}post-hooks"
+    for i in "local" "remote" "sender" "receiver" ; do
+      hopts="$hopts --$yn$i-pre-hook --$yn$i-post-hook"
+    done
+  done
+
+  if [ "$prev" = '=' ]
+  then
+    prev="$before"
+    before='='
+  elif [ "$cur" = '=' ]
+  then
+    cur=
+    before='='
+  fi
+
+  # default completion by host
+  if ! echo "$cur" | grep '^-' > /dev/null
+  then
+    if declare -F _known_hosts_real > /dev/null 2>&1
+    then
+      _known_hosts_real -a "$cur"
+    elif echo "$cur" | grep '@' > /dev/null
+    then
+      COMPREPLY=($(compgen -P "$(echo "$cur" | sed 's/^\(.*@\).*$/\1/')" -W "$hosts" -- "$(echo "$cur" | sed 's/^.*@//')"))
+    else
+      COMPREPLY=($(compgen -W "$hosts" -- ${cur}))
+    fi
+  fi
+  case "$prev" in
+    -p|--port)
+      COMPREPLY=()
+      return 0
+      ;;
+    -h|--host)
+      return 0
+      ;;
+    *)
+      case "$cur" in
+        -*)
+          COMPREPLY=($(compgen -W "$gopts $opts" -- ${cur}))
+          if [ "${#COMPREPLY[@]}" = 0 ] ; then
+            COMPREPLY=($(compgen -W "$hopts" -- ${cur}))
+          fi
+          return 0
+          ;;
+        *)
+          return 0
+          ;;
+      esac
+      ;;
+  esac
+  return 0
+}
+complete -F _pullrc pullrc

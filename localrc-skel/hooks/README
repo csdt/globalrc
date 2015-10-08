@@ -1,0 +1,52 @@
+Hooks are executed with the following order:
+
+*-pre-sync
+  pre-sync
+*-pre-copy
+# copy of the files
+*-post-copy
+  post-sync
+*-post-sync
+
+* is replaced by pull or push according to the script used to sync the conf.
+No error is thrown if the hook file does not exist.
+Hooks can be any executable file (ex: shell script, python script, binary...)
+
+There are also hooks executed on the sender machine:
+  just append sender- at the beggining of the filename
+  ex: sender-pre-sync, sender-push-post-copy
+
+The sender hooks are executed in parallel of their analogous hooks on the receiver.
+
+For push: localhost is the sender and the remote host is the receiver.
+For pull: localhost is the receiver and the remote host is the sender.
+
+Full order execution for push:
+sender-push-pre-sync    # on sender
+sender-pre-sync         # on sender
+sender-push-pre-copy    # on sender
+       push-pre-sync    # on receiver
+       pre-sync         # on receiver
+       push-pre-copy    # on receiver
+# copy of the files
+sender-push-post-copy   # on sender
+sender-post-sync        # on sender
+sender-push-post-sync   # on sender
+       push-post-copy   # on receiver
+       post-sync        # on receiver
+       push-post-sync   # on receiver
+
+Full order execution for pull:
+sender-pull-pre-sync    # on sender
+sender-pre-sync         # on sender
+sender-pull-pre-copy    # on sender
+       pull-pre-sync    # on receiver
+       pre-sync         # on receiver
+       pull-pre-copy    # on receiver
+# copy of the files
+sender-pull-post-copy   # on sender
+sender-post-sync        # on sender
+sender-pull-post-sync   # on sender
+       pull-post-copy   # on receiver
+       post-sync        # on receiver
+       pull-post-sync   # on receiver
