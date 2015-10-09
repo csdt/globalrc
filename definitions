@@ -1,11 +1,11 @@
-#! /bin/bash
+#! /bin/sh
 
 # variable used to store the GLOBALRC path
 export GLOBALRC="$(pwd)"
 
 # Add SCRIPT_PATH to current PATH if not already present
 SCRIPT_PATH="$GLOBALRC/scripts"
-if [ -d "$SCRIPT_PATH" ] && ! ( echo "$PATH" | grep "$SCRIPT_PATH" &> /dev/null)
+if [ -d "$SCRIPT_PATH" ] && ! { echo "$PATH" | grep "$SCRIPT_PATH" > /dev/null 2>&1 ; }
 then
   PATH="$(pwd)/scripts:$PATH"
 fi

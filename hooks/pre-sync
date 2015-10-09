@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 hook="${LOCALRC:-~/.localrc}/hooks/pre-sync"
 if [ -f "$hook" ]
 then

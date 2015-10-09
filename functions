@@ -1,10 +1,11 @@
-#! /bin/bash
+#! /bin/sh
 
 # redo the previous command with sudo before it
 # If args passed, behaves exactly like sudo
-function rs {
+rs () {
   if [ $# = 0 ]
   then
+    # not POSIX compliant
     sudo $(history -p '!!')
   else
     sudo "$@"
@@ -12,7 +13,7 @@ function rs {
 }
 
 # Create a directory and cd into
-function mkcd {
+mkcd () {
   if [ $# = 1 ]
   then
     dir="$1"
@@ -26,7 +27,7 @@ function mkcd {
 
 # If ping is called without arg,
 # just ping google server
-function ping {
+ping () {
   if [ $# = 0 ]
   then
     command ping 8.8.8.8

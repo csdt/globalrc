@@ -1,6 +1,6 @@
 #! /bin/sh
 
-"${GLOBALRC:-$HOME/.globalrc}/install"
+"${GLOBALRC:-"$HOME/.globalrc"}/install"
 
 hook="${LOCALRC:-~/.localrc}/hooks/push-post-copy"
 if [ -f "$hook" ]

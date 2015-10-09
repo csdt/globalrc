@@ -1,4 +1,5 @@
 #! /bin/bash
+# TODO: This file is not POSIX compliant
 
 # cd to the directory of this file
 pushd "$(dirname "$BASH_SOURCE")" > /dev/null

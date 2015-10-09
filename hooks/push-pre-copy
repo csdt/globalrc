@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 hook="${LOCALRC:-~/.localrc}/hooks/push-pre-copy"
 if [ -f "$hook" ]
 then
