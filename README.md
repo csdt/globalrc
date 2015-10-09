@@ -80,7 +80,7 @@ This can be done like that:
 ```sh
 #! /bin/sh
 cd # go to your home
-scp -r user@hostname:.globalrc/. . # copy your remote configuration to your local machine
+scp -r user@hostname:.globalrc/. .globalrc # copy your remote configuration to your local machine
 .globalrc/install # execute the script that will link GLOBALRC to your bashrc
 . .globalrc/bashrc # source the new configuration to immediately benefit from it
 ```
@@ -89,7 +89,7 @@ scp -r user@hostname:.globalrc/. . # copy your remote configuration to your loca
 GLOBALRC is conceived with high compatibility in mind and uses the least possible
 dependencies and the most common ones.
 GLOBALRC is written in `bash` for scripts, and use `ssh` and `scp` to synchronise files.
-It uses `ssh-copy-id`, `grep`, `sed`, `cp`, `mkdir`, `cat`, `id`, `date`, `ps`, `kill` for internal uses.
+It uses `ssh-copy-id`, `grep`, `sed`, `cp`, `rm`, `mkdir`, `cat`, `id`, `date`, `ps`, `kill` for internal uses.
 It also provides better completion if `bash-completion` is installed on the machine.
 
 Scripts are as most as possible POSIX compliant
