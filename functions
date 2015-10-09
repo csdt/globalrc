@@ -19,8 +19,8 @@ function mkcd {
     mkdir -p "$dir"
     cd "$dir"
   else
-    echo "mkcd need 1 arg (and only 1)" >&2
-    exit 1
+    echo "mkcd need one arg (and only one)" >&2
+    return 1
   fi
 }
 
