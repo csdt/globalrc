@@ -29,7 +29,3 @@ then
     fi
   fi
 fi
-if [ -z "$GLOBALRC" ]
-then
-  . ~/.globalrc/bashrc
-fi
