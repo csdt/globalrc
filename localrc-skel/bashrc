@@ -1,50 +1,53 @@
 #! /bin/bash
+################################################################################
+# Machine dependant bashrc
+################################################################################
 
-# Se place dans le dossier .localrc (ou qu'il soit)
+# cd to the directory of this file
 pushd "$(dirname "$BASH_SOURCE")" > /dev/null
 
-# Arrête tout si on a pas réussi à se déplacer
+# Stop if we couldn't move
 if [[ $? != 0 ]]
 then
   exit $?
 fi
 
-
-# Charge le prompt s'il existe
+# Load prompt
 if [ -f prompt ]
 then
   . prompt
 fi
 
-# Charge les définitions de variables si elles existent
+# Load variables definitions
 if [ -f definitions ]
 then
   . definitions
 fi
 
-# Charge les fonctions si elles existent
+# Load functions
 if [ -f functions ]
 then
   . functions
 fi
 
-# Charge les aliases s'ils existent
+# Load aliases
 if [ -f aliases ]
 then
   . aliases
 fi
 
-# Charge les completions s'elles existent
+# Load completions
 if [ -f completions ]
 then
   . completions
 fi
 
-# Affiche le message s'il existe
+# Print the message
 if [ -f message ] && [ "$SHLVL" = 1 ] && [ -n "$PS1" ]
 then
   cat message
 fi
 
-# Se replace dans le dossier précédent ou dans le home en cas d'erreur
+# cd back to the previous directory
+# cd to home if we couldn't cd back
 popd > /dev/null || cd

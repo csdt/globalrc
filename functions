@@ -1,17 +1,17 @@
 #! /bin/bash
 
-# Execute la dernièrne commande en tant que root
+# redo the previous command with sudo before it
+# If args passed, behaves exactly like sudo
 function rs {
   if [ $# = 0 ]
   then
     sudo $(history -p '!!')
-  # Ou agit comme un alias de sudo si des arguemtns sont passés
   else
     sudo "$@"
   fi
 }
 
-# Créer un dossier et se place dedans
+# Create a directory and cd into
 function mkcd {
   if [ $# = 1 ]
   then
@@ -19,12 +19,13 @@ function mkcd {
     mkdir -p "$dir"
     cd "$dir"
   else
-    echo "mkcd nécessite un argument (et un seul)" >&2
+    echo "mkcd need 1 arg (and only 1)" >&2
     exit 1
   fi
 }
 
-# Augmente la commande ping
+# If ping is called without arg,
+# just ping google server
 function ping {
   if [ $# = 0 ]
   then

@@ -1,12 +1,16 @@
 #! /bin/bash
+################################################################################
+# Machine dependant custom completions
+################################################################################
 
+# variable used to store the LOCALRC path
 export LOCALRC="$(pwd)"
 
-# Ajoute les scripts aux programmes par défaut
+# Add SCRIPT_PATH to current PATH if not already present
 SCRIPT_PATH="$LOCALRC/scripts"
 if [ -d "$SCRIPT_PATH" ] && ! ( echo "$PATH" | grep "$SCRIPT_PATH" &> /dev/null)
 then
-  PATH="$SCRIPT_PATH:$PATH"
+  PATH="$(pwd)/scripts:$PATH"
 fi
 unset SCRIPT_PATH
 

@@ -1,5 +1,10 @@
 #! /bin/bash
 ################################################################################
-# Machine dependant custom completions
+# Machine dependant custom prompt
 ################################################################################
+
+# if [ -n "$PS1" ]
+# then
+#   PS1="my super local prompt"
+# fi
 

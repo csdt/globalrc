@@ -1,27 +1,28 @@
 #! /bin/bash
 
-# Aliases pour ls
+# ls sliases
 alias ls='ls --color=auto'
 alias ll='ls -lAFh'
 alias la='ls -A'
 alias l='ls -cF'
 
-# Aliases pour grep
+# grep aliases
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias fgrep='fgrep --colour=auto'
 
-# Alias pour sudo
+# sudo alias
 alias ss='sudo -sE'
 
-# Aliases pour dossiers parents
+# parent directory aliases
 alias ..='cd ..'
 alias ...='cd ../..'
 
-# Alias pour que ssh mette la clé dans le ssh-agent directement
+# Allows ssh to add the ssh key to the ssh-agent before trying to connect host
 alias ssh='ssh-add -l 2> /dev/null || ssh-add ; ssh'
 
-# Aliases pour apt-get
+# Package manager aliases
+# TODO: add more package managers like pacman
 if [ -f $(which apt-get 2> /dev/null) ]
 then
   alias agi='sudo apt-get install'

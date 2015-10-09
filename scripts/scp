@@ -4,21 +4,21 @@
 {
   COMMAND="$(which -a scp | grep -v "${GLOBALRC:-.globalrc}" | grep -v "${LOCALRC:-.localrc}" | head -1)"
 
-  # Supprime le fichier temporaire à la sortie du script
+  # ensure the tempfile will be deleted even if the script exits prematurely
   trap 'RCODE=$? ; rm -f "$tempfile"; exit $RCODE' 0 1 2 3 4 6 8 15
 
-  # Génère un fichier unique pour la concaténation de la configuration
+  # Generate unique temp filename to put the configuration in
   tempfile="/tmp/sshconfig-$(id -ru)-$$-$(date +%N)"
 
-  # Le fichier temporaire n'a pas à être visible des autres utilisateurs
+  # temp file mustn't be visible by other users
   umask 077
   touch "$tempfile"
   chmod 600 "$tempfile" # just in case there is a problem with umask
 
-  # Concaténation des configurations dans un fichier temporaire
+  # Concatenate config files higher priority is given to $LOCALRC/sshconfig
   cat "$LOCALRC/sshconfig" "$GLOBALRC/sshconfig" ~/.ssh/config /etc/ssh/ssh_config > "$tempfile" 2> /dev/null
 
-  # Execute ssh avec le fichier temporaire
+  # Execute ssh with the previous generated conf file
   command "$COMMAND" -F "$tempfile" "$@"
   RCODE="$?"
 

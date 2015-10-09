@@ -9,7 +9,7 @@ then
   blue="34m"
 
 
-  # Couleurs normales
+  # normal colors
   normal_color=$green
   pwd_color=$blue
   history_color="33m"
@@ -18,7 +18,7 @@ then
 
 
 
-  # couleurs dans un ssh
+  # ssh colors
   if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]
   then
     normal_color="36m" # Cyan
@@ -27,7 +27,7 @@ then
 
 
 
-  # Couleurs dans un screen
+  # screen colors
   if [[ $TERMCAP =~ screen ]] || [[ $TERM == "screen" ]]
   then
     pwd_color="33m"    # Jaune
