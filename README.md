@@ -56,7 +56,7 @@ You can do the following commands to do it automatically:
 #! /bin/sh
 cd # go to your home
 git clone https://github.com/csdt/globalrc.git .globalrc # clone from Github
-.globalrc/hooks/push-post-copy # execute the script that will link GLOBALRC to your bashrc
+.globalrc/install # execute the script that will link GLOBALRC to your bashrc
 . .globalrc/bashrc # source the new configuration to immediately benefit from it
 ```
 
@@ -81,7 +81,7 @@ This can be done like that:
 #! /bin/sh
 cd # go to your home
 scp -r user@hostname:.globalrc/. . # copy your remote configuration to your local machine
-.globalrc/hooks/push-post-copy # execute the script that will link GLOBALRC to your bashrc
+.globalrc/install # execute the script that will link GLOBALRC to your bashrc
 . .globalrc/bashrc # source the new configuration to immediately benefit from it
 ```
 
