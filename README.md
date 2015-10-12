@@ -67,6 +67,17 @@ This can be done like this:
 rm -rf ~/.globalrc/.git
 ```
 
+If you want to keep the `.git` folder but you want to place somewhere else
+in order to prevent copy of the `.git` folder, you can execute the following commands:
+```sh
+#! /bin/sh
+cd # go to your home
+git clone --work-tree=.globalrc https://github.com/csdt/globalrc.git .globalrc.git # clone from Github
+echo "gitdir: $(pwd)/.globalrc.git" > .globalrc/.git # tell git how to find '.globalrc.git'
+.globalrc/install # execute the script that will link GLOBALRC to your bashrc
+. .globalrc/bashrc # source the new configuration to immediately benefit from it
+```
+
 ### To another machine
 If you have GLOBALRC installed on your local machine, and you want to install it on another machine,
 the easiest way is to use `pushrc`.
