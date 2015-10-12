@@ -154,7 +154,7 @@ tar_copy_from_remote () {
 tar_copy_to_remote () {
   local tar_compression
   tar_compression=${compression:+z}
-  FAKE_DISPLAY="tar c${tar_compression}f - --posix -C ${GLOBALRC:-.globalrc} . | ssh $masterco ${port:+-p $port} $host 'tar x$tar_compressionf - --posix -C '\$GLOBALRC'"
+  FAKE_DISPLAY="tar c${tar_compression}f - --posix -C ${GLOBALRC:-.globalrc} . | ssh $masterco ${port:+-p $port} $host 'tar x${tar_compression}f - --posix -C '\$GLOBALRC'"
   fake :
   [ -n "$FAKE" ] && return 0
 
