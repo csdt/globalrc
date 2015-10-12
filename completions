@@ -16,7 +16,7 @@ function _pushrc {
   before="${COMP_WORDS[COMP_CWORD-2]}"
   hosts=$(grep -h '^Host' ~/.ssh/config "$GLOBALRC/sshconfig" "$LOCALRC/sshconfig" 2> /dev/null | awk '{print $2}' 2> /dev/null)
   gopts="-v --verbose -q --quiet -f --fake -? --help --version"
-  opts="-k --export-key -K --no-export-key -m --master-co -M --no-master-co -t --scp-trick -T --no-scp-trick -c --compression -C --no-compression -p --port -h --host"
+  opts="-k --export-key -K --no-export-key -m --master-co -M --no-master-co -t --scp-trick -T --no-scp-trick --tar --no-tar -c --compression -C --no-compression -p --port -h --host"
   hopts="-s --hooks -S --no-hooks"
   for yn in "" "no-" ; do
     hopts="$hopts --${yn}pre-hooks --${yn}post-hooks"
@@ -69,8 +69,8 @@ function _pushrc {
           ;;
         -*)
           COMPREPLY=($(compgen -W "$gopts $opts" -- ${cur}))
-          if [ ${#COMPREPLY[@]} = 0 ] ; then
-            COMPREPLY=($(compgen -W "$hopts" -- ${cur}))
+          if [ ${#COMPREPLY[@]} -le 3 ] ; then
+            COMPREPLY+=($(compgen -W "$hopts" -- ${cur}))
           fi
           return 0
           ;;
@@ -94,7 +94,7 @@ function _pullrc {
   before="${COMP_WORDS[COMP_CWORD-2]}"
   hosts=$(grep -h '^Host' ~/.ssh/config "$GLOBALRC/sshconfig" "$LOCALRC/sshconfig" 2> /dev/null | awk '{print $2}' 2> /dev/null)
   gopts="-v --verbose -q --quiet -f --fake -? --help --version"
-  opts="-k --export-key -K --no-export-key -m --master-co -M --no-master-co -t --scp-trick -T --no-scp-trick -c --compression -C --no-compression -p --port -h --host"
+  opts="-m --master-co -M --no-master-co -t --scp-trick -T --no-scp-trick --tar --no-tar -c --compression -C --no-compression -p --port -h --host"
   hopts="-s --hooks -S --no-hooks"
   for yn in "" "no-" ; do
     hopts="$hopts --${yn}pre-hooks --${yn}post-hooks"
@@ -138,8 +138,8 @@ function _pullrc {
       case "$cur" in
         -*)
           COMPREPLY=($(compgen -W "$gopts $opts" -- ${cur}))
-          if [ "${#COMPREPLY[@]}" = 0 ] ; then
-            COMPREPLY=($(compgen -W "$hopts" -- ${cur}))
+          if [ "${#COMPREPLY[@]}" -le 3 ] ; then
+            COMPREPLY+=($(compgen -W "$hopts" -- ${cur}))
           fi
           return 0
           ;;

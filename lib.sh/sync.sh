@@ -86,7 +86,7 @@ establish_master_co () {
     info "Establishing the master connection to $host${port:+:$port}"
 
     # try to establish master connexion
-    if fake ssh -nNfS $mastersoc $masterco $compression ${port:+-p $port} "$host"
+    if fake ssh -nNfS $mastersoc $masterco ${port:+-p $port} "$host"
     then
       # get ssh master connexion PID
       FAKE_DISPLAY="ssh -S $mastersoc -O check ${port:+-p $port} $host" fake :
@@ -141,3 +141,40 @@ close_master () {
   trap 0 1 2 3 4 6 8 15
 }
 
+tar_copy_from_remote () {
+  local tar_compression
+  tar_compression=${compression:+z}
+  FAKE_DISPLAY="ssh $masterco ${port:+-p $port} $host 'tar c${tar_compression}f - -C '\$GLOBALRC' . | tar x${tar_compression}f - -C ${GLOBALRC:-.globalrc}"
+  fake :
+  [ -n "$FAKE" ] && return 0
+  ssh $masterco ${port:+-p $port} "$host" "$remote_source"'
+    tar c'$tar_compression'f - -C "${GLOBALRC:-.globalrc}" .
+  ' | tar x"$tar_compression"f - -C "${GLOBALRC:-.globalrc}"
+}
+tar_copy_to_remote () {
+  local tar_compression
+  tar_compression=${compression:+z}
+  FAKE_DISPLAY="tar c${tar_compression}f - -C ${GLOBALRC:-.globalrc} . | ssh $masterco ${port:+-p $port} $host 'tar x$tar_compressionf - -C '\$GLOBALRC'"
+  fake :
+  [ -n "$FAKE" ] && return 0
+
+  trap 'RCODE=$? ; rm -f "$tempfile"; exit $RCODE' 0 1 2 3 4 6 8 15
+  tempfile="/tmp/tarssh-$(id -ru)-$$-$(date +%N)"
+  umask 077
+  mkfifo "$tempfile"
+  chmod 600 "$tempfile"
+
+  verbose tar c${tar_compression}f - -C "${GLOBALRC:-.globalrc}" .
+  { tar c${tar_compression}f - -C "${GLOBALRC:-.globalrc}" . > "$tempfile" & } &&
+  ssh $masterco ${port:+-p $port} "$host" "$remote_source"'
+    dir="${GLOBALRC:-.globalrc}"
+    [ ! -d "$dir" ] && mkdir "$dir"
+    tar x'$tar_compression'f - -C "$dir"
+  ' < "$tempfile"
+
+  RCODE=$?
+
+  rm -f "$tempfile"
+  trap 0 1 2 3 4 6 8 15
+  return $RCODE
+}

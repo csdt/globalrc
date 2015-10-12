@@ -13,6 +13,7 @@
   key_file=
   export_key=0
   use_master_co=1
+  use_tar=1
   use_scp_trick=1
   use_compression=1
   port=
@@ -79,6 +80,16 @@
     fi
 
     info "  Copy files onto $host${port:+:$port}"
+    if [ "${use_tar:-0}" != 0 ]
+    then
+      if tar_copy_to_remote
+      then
+        info "      Files successfully copied"
+        return 0
+      fi
+      warning "      Error when using tar over ssh"
+      warning "    Trying again with scp"
+    fi
     if [ "${use_scp_trick:-0}" != 0 ]
     then
       FAKE_DISPLAY="scp -q $masterco $compression ${port:+-P $port} -r ${GLOBALRC_DIR}. $host":\'\"'$(echo "$GLOBALRC")'\"\'
@@ -417,6 +428,14 @@
         ;;
       -T|--no-scp-trick)
         use_scp_trick=0
+        first_args=0
+        ;;
+      --tar)
+        use_tar=1
+        first_args=0
+        ;;
+      --no-tar)
+        use_tar=0
         first_args=0
         ;;
       -c|--compression)
