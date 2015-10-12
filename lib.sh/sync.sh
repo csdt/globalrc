@@ -144,17 +144,17 @@ close_master () {
 tar_copy_from_remote () {
   local tar_compression
   tar_compression=${compression:+z}
-  FAKE_DISPLAY="ssh $masterco ${port:+-p $port} $host 'tar c${tar_compression}f - -C '\$GLOBALRC' . | tar x${tar_compression}f - -C ${GLOBALRC:-.globalrc}"
+  FAKE_DISPLAY="ssh $masterco ${port:+-p $port} $host 'tar c${tar_compression}f - --posix -C '\$GLOBALRC' . | tar x${tar_compression}f - --posix -C ${GLOBALRC:-.globalrc}"
   fake :
   [ -n "$FAKE" ] && return 0
   ssh $masterco ${port:+-p $port} "$host" "$remote_source"'
-    tar c'$tar_compression'f - -C "${GLOBALRC:-.globalrc}" .
-  ' | tar x"$tar_compression"f - -C "${GLOBALRC:-.globalrc}"
+    tar c'$tar_compression'f - --posix -C "${GLOBALRC:-.globalrc}" .
+  ' | tar x"$tar_compression"f - --posix -C "${GLOBALRC:-.globalrc}"
 }
 tar_copy_to_remote () {
   local tar_compression
   tar_compression=${compression:+z}
-  FAKE_DISPLAY="tar c${tar_compression}f - -C ${GLOBALRC:-.globalrc} . | ssh $masterco ${port:+-p $port} $host 'tar x$tar_compressionf - -C '\$GLOBALRC'"
+  FAKE_DISPLAY="tar c${tar_compression}f - --posix -C ${GLOBALRC:-.globalrc} . | ssh $masterco ${port:+-p $port} $host 'tar x$tar_compressionf - --posix -C '\$GLOBALRC'"
   fake :
   [ -n "$FAKE" ] && return 0
 
@@ -164,12 +164,11 @@ tar_copy_to_remote () {
   mkfifo "$tempfile"
   chmod 600 "$tempfile"
 
-  verbose tar c${tar_compression}f - -C "${GLOBALRC:-.globalrc}" .
-  { tar c${tar_compression}f - -C "${GLOBALRC:-.globalrc}" . > "$tempfile" & } &&
+  tar c${tar_compression}f - --posix -C "${GLOBALRC:-.globalrc}" . > "$tempfile" &
   ssh $masterco ${port:+-p $port} "$host" "$remote_source"'
     dir="${GLOBALRC:-.globalrc}"
     [ ! -d "$dir" ] && mkdir "$dir"
-    tar x'$tar_compression'f - -C "$dir"
+    tar x'$tar_compression'f - --posix -C "$dir"
   ' < "$tempfile"
 
   RCODE=$?
