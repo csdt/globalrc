@@ -4,9 +4,10 @@
 {
   # find vim command outside the GLOBALRC dir and the LOCALRC dir
   COMMAND="$(which -a vim | grep -v "${GLOBALRC:-.globalrc}" | grep -v "${LOCALRC:-.localrc}" | head -1)"
+  stty_conf="$(stty -g)"
 
   # Delete the tempfile when the script crash or exit before actually delete it
-  trap 'RCODE=$? ; rm -f "$tempfile"; exit $RCODE' 0 1 2 3 4 6 8 15
+  trap 'RCODE=$? ; rm -f "$tempfile" ; stty "$stty_conf" ; exit $RCODE' 0 1 2 3 4 6 8 15
 
   # Generate a unique temp filename
   tempfile="/tmp/vimrc-$(id -ru)-$$-$(date +%N)"
