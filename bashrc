@@ -5,15 +5,9 @@
 pushd "$(dirname "$BASH_SOURCE")" > /dev/null
 
 # Stop if we couldn't move
-if [[ $? != 0 ]]
+if [ $? != 0 ]
 then
   exit $?
-fi
-
-# Load prompt
-if [ -f prompt ]
-then
-  . prompt
 fi
 
 # Load variables definitions
@@ -34,16 +28,25 @@ then
   . aliases
 fi
 
-# Load completions
-if [ -f completions ]
+if [ -n "$PS1" -a "${GLOBALRC_NOT_INTERACTIVE:-0}" = 0 ] && [[ $- = *i* ]]
 then
-  . completions
-fi
+  # Load prompt
+  if [ -f prompt ]
+  then
+    . prompt
+  fi
 
-# Print the message
-if [ -f message ] && [ "$SHLVL" = 1 ] && [ -n "$PS1" ]
-then
-  cat message
+  # Print the message
+  if [ -f message ] && [ "$SHLVL" = 1 ]
+  then
+    cat message
+  fi
+
+  # Load completions
+  if [ -f completions ]
+  then
+    . completions
+  fi
 fi
 
 # cd back to the previous directory

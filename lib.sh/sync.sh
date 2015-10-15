@@ -13,7 +13,8 @@ HOOKS_DIR="${GLOBALRC_DIR}hooks/"
 remote_source='
   # set shell as interactive
   set -i 2>/dev/null ;
-  PS1="fake interactive shell" ;
+  PS1="not interactive" ;
+  GLOBALRC_NOT_INTERACTIVE=1 ;
 
   # reload bashrc
   . .bashrc >/dev/null 2>&1 ;
