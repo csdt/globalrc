@@ -1,7 +1,34 @@
 #! /bin/bash
 
-if [ -n "$PS1" ]
+if [ -n "$PS1" -a "$PS1" != "not interactive" ]
 then
+  shell_start_clock () {
+    #echo start clock $SHELL_CLOCK_PID
+    ${GLOBALRC:+${GLOBALRC}/}scripts/clock &
+    SHELL_CLOCK_PID=$!
+    disown $SHELL_CLOCK_PID
+  }
+  shell_pause_clock () {
+    #echo pause clock $SHELL_CLOCK_PID
+    kill -s 19 $SHELL_CLOCK_PID > /dev/null 2>&1
+  }
+  shell_resume_clock () {
+    #echo resume clock $SHELL_CLOCK_PID
+    kill -s 18 $SHELL_CLOCK_PID > /dev/null 2>&1
+  }
+  shell_kill_clock () {
+    #echo kill clock $SHELL_CLOCK_PID
+    kill $SHELL_CLOCK_PID > /dev/null 2>&1
+    SHELL_CLOCK_PID=
+  }
+  trap 'shell_pause_clock' DEBUG
+  #trap 'shell_kill_clock' 1 2 3 4 6 8 15
+  trap 'RCODE=$? ; shell_kill_clock ; exit $RCODE' EXIT
+  if [ -n "$SHELL_CLOCK_PID" ]
+  then
+    shell_kill_clock
+  fi
+  shell_start_clock
 
   white="00m"
   red="31m"
@@ -48,7 +75,7 @@ then
   history="\[\e[00;$history_color\]\$SHLVL[\!]"
   end="\[\e[01;$end_color\]\\\$\[\e[00m\]"
 
-  PS1="$execution $user $history $pwd $end "
+  PS1="$execution $user $history $pwd $end "'\[$(shell_resume_clock)\]'
 
   unset white red green blue normal_color pwd_color history_color end_color root_color color execution user pwd history end
 
