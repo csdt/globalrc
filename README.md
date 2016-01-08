@@ -72,8 +72,7 @@ in order to prevent copy of the `.git` folder, you can execute the following com
 ```sh
 #! /bin/sh
 cd # go to your home
-git clone --work-tree=.globalrc https://github.com/csdt/globalrc.git .globalrc.git # clone from Github
-echo "gitdir: $(pwd)/.globalrc.git" > .globalrc/.git # tell git how to find '.globalrc.git'
+git clone https://github.com/csdt/globalrc.git .globalrc --separate-git-dir .globalrc.git # clone from Github
 .globalrc/install # execute the script that will link GLOBALRC to your bashrc
 . .globalrc/bashrc # source the new configuration to immediately benefit from it
 ```
