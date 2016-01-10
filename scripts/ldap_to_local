@@ -2,8 +2,7 @@
 
 # This script transforms a LDAP acces via PAM in a local access.
 # Be VERY careful using it, it could break LDAP access.
-pushd `dirname $0` > /dev/null
-source ../bash/functions
+source $GLOBALRC/bash/functions
 
 LdapUid=`id -u`
 Username=`id -u -n`
@@ -23,7 +22,7 @@ However, don't do it until you know what the scripts/ldap_to_local is doing."
       # careful escaping variables, etc ...
       tempfile="/tmp/ldap-to-local-$UID-$$-$RANDOM"
       # We need the confirm helper in the tempfile
-      cp ../bash/functions $tempfile
+      cp $GLOBALRC/bash/functions $tempfile
       echo "
 
         echo 'Deactivating LDAP ...'
@@ -56,5 +55,3 @@ However, don't do it until you know what the scripts/ldap_to_local is doing."
     fi
   fi
 fi
-
-popd > /dev/null
