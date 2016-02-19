@@ -1,9 +1,9 @@
 #! /bin/bash
 
 eval "$(declare -f _known_hosts_real 2>/dev/null | sed '/\blocal\b.*-a.*\bconfig\b/{a\
-  [ -f "$GLOBALRC/sshconfig" ] && config+=( "$GLOBALRC/sshconfig")
+  [ -f "$GLOBALRC/ssh_config" ] && config+=( "$GLOBALRC/ssh_config")
 a\
-  [ -f "$LOCALRC/sshconfig" ] && config+=( "$LOCALRC/sshconfig")
+  [ -f "$LOCALRC/ssh_config" ] && config+=( "$LOCALRC/ssh_config")
 }')"
 
 function _pushrc {
@@ -14,7 +14,7 @@ function _pushrc {
   cur="${COMP_WORDS[COMP_CWORD]}"
   prev="${COMP_WORDS[COMP_CWORD-1]}"
   before="${COMP_WORDS[COMP_CWORD-2]}"
-  hosts=$(grep -h '^Host' ~/.ssh/config "$GLOBALRC/sshconfig" "$LOCALRC/sshconfig" 2> /dev/null | awk '{print $2}' 2> /dev/null)
+  hosts=$(grep -h '^Host' ~/.ssh/config "$GLOBALRC/ssh_config" "$LOCALRC/ssh_config" 2> /dev/null | awk '{print $2}' 2> /dev/null)
   gopts="-v --verbose -q --quiet -f --fake -? --help --version"
   opts="-k --export-key -K --no-export-key -m --master-co -M --no-master-co -t --scp-trick -T --no-scp-trick --tar --no-tar -c --compression -C --no-compression -p --port -h --host"
   hopts="-s --hooks -S --no-hooks"
@@ -92,7 +92,7 @@ function _pullrc {
   cur="${COMP_WORDS[COMP_CWORD]}"
   prev="${COMP_WORDS[COMP_CWORD-1]}"
   before="${COMP_WORDS[COMP_CWORD-2]}"
-  hosts=$(grep -h '^Host' ~/.ssh/config "$GLOBALRC/sshconfig" "$LOCALRC/sshconfig" 2> /dev/null | awk '{print $2}' 2> /dev/null)
+  hosts=$(grep -h '^Host' ~/.ssh/config "$GLOBALRC/ssh_config" "$LOCALRC/ssh_config" 2> /dev/null | awk '{print $2}' 2> /dev/null)
   gopts="-v --verbose -q --quiet -f --fake -? --help --version"
   opts="-m --master-co -M --no-master-co -t --scp-trick -T --no-scp-trick --tar --no-tar -c --compression -C --no-compression -p --port -h --host"
   hopts="-s --hooks -S --no-hooks"
