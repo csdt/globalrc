@@ -141,7 +141,7 @@
       if ! execute_hooks "$host" pre push
       then
         error "      Error encountered while executing pre-sync local hook scripts"
-        warning "      Maybe you try to push your configuration on a mahcine without GLOBALRC"
+        warning "      Maybe you try to push your configuration on a machine without GLOBALRC"
 
         # It is hard to get the exit code of the piped command in a POSIX shell
         # so the best way is to not use the named stream error
@@ -167,7 +167,7 @@
       if ! hook_remote_pre_sync
       then
         error "      Error encountered while executing pre-sync remote hook scripts"
-        warning "      Maybe you try to push your configuration on a mahcine without GLOBALRC"
+        warning "      Maybe you try to push your configuration on a machine without GLOBALRC"
 
         # It is hard to get the exit code of the piped command in a POSIX shell
         # so the best way is to not use the named stream error

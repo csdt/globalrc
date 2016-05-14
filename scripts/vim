@@ -27,7 +27,9 @@
   # Generate the configuration and put it into a named pipe
   {
     {
-      echo "set directory=$SWAPFILES_DIR//"
+      if [ -z $GLOBALRC_DISABLE_VIM_SWP_MOVING ] ; then
+        echo "set directory=$SWAPFILES_DIR//"
+      fi
       cat /etc/vim/vimrc ~/.vimrc "$GLOBALRC/vimrc" "$LOCALRC/vimrc" 2> /dev/null
     } > "$tempfile"
 
